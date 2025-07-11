@@ -16,29 +16,29 @@ Sleep apnea is a sleep disorder characterized by repeated interruptions in breat
 We aim to automate detection using deep learning techniques and evaluate how well models generalize across different individuals.
 
 ---
+## 📂 Dataset Description
 
-## 📦 Dataset
+The raw data provided consisted of **overnight respiratory recordings** for multiple participants (`AP01` to `AP05`) collected via physiological sensors. Each participant folder included multiple files such as:
 
-- **Source**: [breathing_dataset.csv](dataset/breathing_dataset.csv)
-- **Shape**: Each row contains:
-  - Participant ID (`participant_id`)
-  - Label (`label`: Normal, Hypopnea, or Obstructive Apnea)
-  - Extracted features (`feature_1`, `feature_2`, ..., `feature_N`)
+- 🌀 **Nasal Airflow Signals** (`Flow*.txt`)
+- 🫁 **Thoracic/Abdominal Movements** (`Thorac*.txt`, `Movement*.txt`, or `Abdominal*.txt`)
+- 🩸 **Blood Oxygen Saturation (SpO₂)** (`SPO2*.txt`)
+- 📝 **Event Annotations** indicating sleep apnea or hypopnea episodes (`Flow Events*.txt`)
+- 🛏️ **Sleep Profile Metadata** (`Sleep profile*.txt`)
 
+These files were raw, noisy, and spread across multiple inconsistent formats, requiring structured processing before training any model.
 
-Each participant's data includes time-series signals recorded during overnight sleep:
+---
 
-- **Nasal Airflow** (sampled at 32 Hz)
-- **Thoracic/Abdominal Movement** (32 Hz)
-- **SpO₂** (4 Hz)
-- **Event Annotations** including start and end times for apnea and hypopnea episodes
+## 🔧 Preprocessing Summary
 
-Participants: `AP01` to `AP05`
+A dedicated pipeline was used to clean and extract meaningful training features:
 
-- **Preprocessing**:
-  - Label encoding
-  - Feature normalization
-  - Leave-one-subject-out (LOSO) splitting
+- 🕒 **Time-aligned signals** using timestamps
+- 🔢 **Resampled/normalized** signals to consistent sampling rates (e.g., 32 Hz for flow/thorac, 4 Hz for SpO₂)
+- 🧠 **Segmentation and feature extraction** to form per-event feature vectors
+- 🔄 **Label mapping** (`Normal`, `Hypopnea`, `Obstructive Apnea`)
+- 🧼 **Invalid or missing values** were handled via parsing and filtering
 
 The dataset is preprocessed into features saved in `breathing_dataset.csv` containing:
 - `feature_0` to `feature_n`
